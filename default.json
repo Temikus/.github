@@ -1,0 +1,59 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "schedule": [
+    "before 9am on monday"
+  ],
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "schedule": [
+      "at any time"
+    ],
+    "labels": [
+      "security"
+    ]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Inline version pins marked with a # renovate: comment",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.+\\.ya?ml$/",
+        "/(^|/)justfile$/",
+        "/(^|/)just/.+\\.just$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+[A-Z_]*VERSION=\"(?<currentValue>[^\"]+)\""
+      ]
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "One PR for all action digest bumps",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "digest",
+        "pinDigest"
+      ],
+      "groupName": "github-actions digests"
+    },
+    {
+      "description": "Bump betterleaks in mise and workflows in one PR, so the pins can't drift",
+      "matchPackageNames": [
+        "betterleaks/betterleaks"
+      ],
+      "groupName": "betterleaks"
+    },
+    {
+      "description": "Bump golangci-lint in mise and workflows in one PR, so the pins can't drift",
+      "matchPackageNames": [
+        "golangci/golangci-lint"
+      ],
+      "groupName": "golangci-lint"
+    }
+  ]
+}

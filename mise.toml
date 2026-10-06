@@ -1,0 +1,7 @@
+[tools]
+node = "24.21.0"
+# @yarnpkg/libzip 3.2.2 was hand-published by Yarn's lead maintainer without provenance,
+# so mise's npm trust policy rejects it. Drop the exclude once Renovate stops pulling it in.
+"npm:renovate" = { version = "44.134.1", trust_policy_excludes = ["@yarnpkg/libzip@3.2.2"] }
+"aqua:casey/just" = "1.58.0"
+"aqua:rhysd/actionlint" = "1.7.12"
