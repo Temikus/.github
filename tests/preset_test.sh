@@ -43,5 +43,7 @@ expect_count "setup-just version is tracked once" ' casey/just 1\.58\.0 ' 1
 expect_count "betterleaks pins share one branch" 'betterleaks/betterleaks .* renovate/betterleaks$' 2
 expect_count "golangci-lint pins share one branch" 'golangci/golangci-lint .* renovate/golangci-lint$' 2
 expect "the lint action keeps its own branch" 'golangci/golangci-lint-action .* renovate/golangci-golangci-lint-action-'
+# x/net v0.58.0 is indirect and has OSV advisories, so the preset must open a security fix for it.
+expect "a vulnerable indirect Go module gets a security branch" '^gomod go\.mod golang\.org/x/net v0\.58\.0 renovate/go-golang\.org-x-net-vulnerability$'
 
 exit "$rc"
