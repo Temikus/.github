@@ -31,6 +31,17 @@
   ],
   "packageRules": [
     {
+      "description": "Track indirect Go modules (off by default) so vulnerability fixes reach them; routine bumps wait for dashboard approval",
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepTypes": [
+        "indirect"
+      ],
+      "enabled": true,
+      "dependencyDashboardApproval": true
+    },
+    {
       "description": "One PR for all action digest bumps",
       "matchManagers": [
         "github-actions"

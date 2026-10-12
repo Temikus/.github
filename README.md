@@ -28,6 +28,7 @@ It adds, on top of `config:recommended`:
 
 - One PR for all action digest bumps.
 - One PR per tool pinned in both `mise.toml` and a workflow (betterleaks, golangci-lint).
+- Indirect Go modules tracked, so vulnerability fixes reach them. Routine bumps to them wait for dashboard approval.
 
 ## Development
 
