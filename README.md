@@ -29,14 +29,17 @@ It adds, on top of `config:recommended`:
 - One PR for all action digest bumps.
 - One PR per tool pinned in both `mise.toml` and a workflow (betterleaks, golangci-lint).
 - Indirect Go modules tracked, so vulnerability fixes reach them. Routine bumps to them wait for dashboard approval.
+- Copier template updates at any time, not in the Monday batch.
 
 ## Shared justfile recipes
 
 `template/` is a [Copier](https://copier.readthedocs.io) template. It renders `just/common.just`, which holds the shared `release` and `sync-common` recipes. Adopt it once from a repo's root:
 
 ```bash
-uvx copier copy gh:Temikus/.github .
+uvx copier copy https://github.com/Temikus/.github.git .
 ```
+
+Use the full URL, not Copier's `gh:` shorthand. Renovate can't look up tags for `gh:` and never opens an update PR.
 
 Then import it at the top of the repo's `justfile`. A recipe of the same name in the `justfile` overrides the imported one.
 
