@@ -65,6 +65,15 @@
         "golangci/golangci-lint"
       ],
       "groupName": "golangci-lint"
+    },
+    {
+      "description": "Template updates come from us, so don't batch them",
+      "matchManagers": [
+        "copier"
+      ],
+      "schedule": [
+        "at any time"
+      ]
     }
   ]
 }

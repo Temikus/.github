@@ -15,7 +15,8 @@ git -C "$work/repo" init -q
 git -C "$work/repo" add -A
 git -C "$work/repo" -c user.name=test -c user.email=test@example.com commit -qm fixture
 
-(cd "$work/repo" && LOG_LEVEL=debug LOG_FORMAT=json RENOVATE_CONFIG_FILE="$root/default.json" \
+# trace, because only the trace-level "branches" entry shows each branch's schedule.
+(cd "$work/repo" && LOG_LEVEL=trace LOG_FORMAT=json RENOVATE_CONFIG_FILE="$root/default.json" \
   renovate --platform=local --dry-run=lookup --require-config=ignored --onboarding=false) >"$work/log" 2>&1 || {
   tail -n 20 "$work/log" >&2
   exit 1
@@ -27,9 +28,17 @@ deps=$(jq -r 'select(.msg == "packageFiles with updates") | .config | to_entries
   | "\($m) \($f) \(.packageName) \(.currentValue) \(.updates[0].branchName // "-")"' "$work/log")
 echo "$deps"
 
+# One line per branch: its managers, then its schedule
+branches=$(jq -r 'select(.msg == "branches") | .branches[]
+  | "\([.upgrades[].manager] | unique | join(",")) \(.schedule | join(","))"' "$work/log")
+echo "$branches"
+
 rc=0
 expect() {
   if grep -qE "$2" <<<"$deps"; then echo "PASS: $1"; else echo "FAIL: $1" >&2; rc=1; fi
+}
+expect_branch() {
+  if grep -qE "$2" <<<"$branches"; then echo "PASS: $1"; else echo "FAIL: $1" >&2; rc=1; fi
 }
 expect_count() {
   local n
@@ -45,5 +54,8 @@ expect_count "golangci-lint pins share one branch" 'golangci/golangci-lint .* re
 expect "the lint action keeps its own branch" 'golangci/golangci-lint-action .* renovate/golangci-golangci-lint-action-'
 # x/net v0.58.0 is indirect and has OSV advisories, so the preset must open a security fix for it.
 expect "a vulnerable indirect Go module gets a security branch" '^gomod go\.mod golang\.org/x/net v0\.58\.0 renovate/go-golang\.org-x-net-vulnerability$'
+expect "a template answers file gets an update" '^copier \.copier-answers\.yml https://github\.com/Temikus/\.github\.git v0\.0\.0 renovate/'
+expect_branch "template updates skip the Monday batch" '^copier at any time$'
+expect_branch "other updates keep the Monday batch" '^regex before 9am on monday$'
 
 exit "$rc"
