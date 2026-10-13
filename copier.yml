@@ -1,0 +1,3 @@
+# Copier renders template/ into each repo. Renovate's copier manager opens the update PRs.
+# No tasks, migrations or Jinja extensions: they need --trust, which hosted Renovate can't pass.
+_subdirectory: template

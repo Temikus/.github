@@ -8,10 +8,12 @@ lint:
     mise x -- renovate-config-validator --strict --no-global default.json renovate.json
     mise x -- actionlint
     just --fmt --check
+    just --fmt --check --justfile template/just/common.just
 
-# Check the preset against tests/fixture: what it extracts and how it groups bumps
+# Check the preset against tests/fixture, and the Copier template against a scratch repo
 test:
     tests/preset_test.sh
+    tests/template_test.sh
 
 # Every gate CI runs
 check: lint test
