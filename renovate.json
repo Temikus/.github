@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>Temikus/.github"],
+  "extends": ["github>Temikus/.github", "github>temikus/renovate-config"],
   "packageRules": [
     {
       "description": "Renovate's CLI only supports Node 24",
